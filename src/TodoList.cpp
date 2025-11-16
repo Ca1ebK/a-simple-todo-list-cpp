@@ -1,8 +1,19 @@
 #include "TodoList.hpp"
 
-void TodoList::add(const std::string& description) {
+bool TodoList::add(const std::string& description) {
+    if (description.empty() || description.find_first_not_of(' ') == std::string::npos) {
+        return false;
+    }
+    
+    for (int i = 0; i < tasks.size(); i++) {
+        if (tasks[i].getDescription() == description && !tasks[i].isComplete()) {
+            return false;
+        }
+    }
+    
     Task newTask(description);
     tasks.push_back(newTask);
+    return true;
 }
 
 bool TodoList::complete(int index) {

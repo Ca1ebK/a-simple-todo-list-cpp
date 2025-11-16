@@ -234,11 +234,74 @@ TEST_CASE("Task can be marked complete") {
     REQUIRE(task.isComplete() == true);
 }
 
-TEST_CASE("Empty string task description is valid") {
+TEST_CASE("Empty string task description is rejected") {
     TodoList list;
     
-    list.add("");
+    bool result = list.add("");
     
+    REQUIRE(result == false);
+    REQUIRE(list.size() == 0);
+}
+
+TEST_CASE("Blank string with spaces is rejected") {
+    TodoList list;
+    
+    bool result = list.add("   ");
+    
+    REQUIRE(result == false);
+    REQUIRE(list.size() == 0);
+}
+
+TEST_CASE("Valid task description is accepted") {
+    TodoList list;
+    
+    bool result = list.add("Valid task");
+    
+    REQUIRE(result == true);
     REQUIRE(list.size() == 1);
-    REQUIRE(list.all()[0].getDescription() == "");
+}
+
+TEST_CASE("Duplicate incomplete task is rejected") {
+    TodoList list;
+    list.add("Buy milk");
+    
+    bool result = list.add("Buy milk");
+    
+    REQUIRE(result == false);
+    REQUIRE(list.size() == 1);
+}
+
+TEST_CASE("Duplicate completed task is allowed") {
+    TodoList list;
+    list.add("Buy milk");
+    list.complete(0);
+    
+    bool result = list.add("Buy milk");
+    
+    REQUIRE(result == true);
+    REQUIRE(list.size() == 2);
+}
+
+TEST_CASE("Can add task after completing duplicate") {
+    TodoList list;
+    list.add("Walk dog");
+    list.complete(0);
+    list.add("Walk dog");
+    
+    REQUIRE(list.size() == 2);
+    REQUIRE(list.completed().size() == 1);
+    REQUIRE(list.incomplete().size() == 1);
+}
+
+TEST_CASE("Multiple different tasks can be added") {
+    TodoList list;
+    
+    bool result1 = list.add("Task 1");
+    bool result2 = list.add("Task 2");
+    bool result3 = list.add("Task 3");
+    
+    REQUIRE(result1 == true);
+    REQUIRE(result2 == true);
+    REQUIRE(result3 == true);
+    REQUIRE(list.size() == 3);
 }

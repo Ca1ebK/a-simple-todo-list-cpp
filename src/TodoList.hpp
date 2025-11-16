@@ -6,7 +6,7 @@
 
 class TodoList {
 public:
-    void add(const std::string& description);
+    bool add(const std::string& description);
     bool complete(int index);
     
     std::vector<Task> all() const;
