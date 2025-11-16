@@ -22,7 +22,7 @@ TEST_CASE("Added task appears in all tasks") {
     TodoList list;
     list.add("Buy groceries");
     
-    std::vector<Task> allTasks = list.all();
+    std::vector<Task> allTasks = list.getAllTasks();
     
     REQUIRE(allTasks.size() == 1);
     REQUIRE(allTasks[0].getDescription() == "Buy groceries");
@@ -32,8 +32,8 @@ TEST_CASE("New task is incomplete by default") {
     TodoList list;
     list.add("Buy groceries");
     
-    std::vector<Task> incompleteTasks = list.incomplete();
-    std::vector<Task> completedTasks = list.completed();
+    std::vector<Task> incompleteTasks = list.getIncompleteTasks();
+    std::vector<Task> completedTasks = list.getCompletedTasks();
     
     REQUIRE(incompleteTasks.size() == 1);
     REQUIRE(completedTasks.size() == 0);
@@ -46,8 +46,8 @@ TEST_CASE("Can mark a task as complete") {
     bool result = list.complete(0);
     
     REQUIRE(result == true);
-    REQUIRE(list.completed().size() == 1);
-    REQUIRE(list.incomplete().size() == 0);
+    REQUIRE(list.getCompletedTasks().size() == 1);
+    REQUIRE(list.getIncompleteTasks().size() == 0);
 }
 
 TEST_CASE("Can add multiple tasks to the list") {
@@ -66,7 +66,7 @@ TEST_CASE("All tasks appear in correct order") {
     list.add("Second task");
     list.add("Third task");
     
-    std::vector<Task> allTasks = list.all();
+    std::vector<Task> allTasks = list.getAllTasks();
     
     REQUIRE(allTasks.size() == 3);
     REQUIRE(allTasks[0].getDescription() == "First task");
@@ -80,8 +80,8 @@ TEST_CASE("Multiple tasks are incomplete by default") {
     list.add("Task 2");
     list.add("Task 3");
     
-    REQUIRE(list.incomplete().size() == 3);
-    REQUIRE(list.completed().size() == 0);
+    REQUIRE(list.getIncompleteTasks().size() == 3);
+    REQUIRE(list.getCompletedTasks().size() == 0);
 }
 
 TEST_CASE("Can complete multiple tasks") {
@@ -94,8 +94,8 @@ TEST_CASE("Can complete multiple tasks") {
     list.complete(1);
     list.complete(2);
     
-    REQUIRE(list.completed().size() == 3);
-    REQUIRE(list.incomplete().size() == 0);
+    REQUIRE(list.getCompletedTasks().size() == 3);
+    REQUIRE(list.getIncompleteTasks().size() == 0);
 }
 
 TEST_CASE("Can have mix of completed and incomplete tasks") {
@@ -108,8 +108,8 @@ TEST_CASE("Can have mix of completed and incomplete tasks") {
     list.complete(0);
     list.complete(2);
     
-    REQUIRE(list.completed().size() == 2);
-    REQUIRE(list.incomplete().size() == 2);
+    REQUIRE(list.getCompletedTasks().size() == 2);
+    REQUIRE(list.getIncompleteTasks().size() == 2);
 }
 
 TEST_CASE("Completing task with invalid positive index returns false") {
@@ -168,8 +168,8 @@ TEST_CASE("Clear removes both completed and incomplete tasks") {
     
     list.clear();
     
-    REQUIRE(list.completed().size() == 0);
-    REQUIRE(list.incomplete().size() == 0);
+    REQUIRE(list.getCompletedTasks().size() == 0);
+    REQUIRE(list.getIncompleteTasks().size() == 0);
 }
 
 TEST_CASE("Can add tasks after clearing") {
@@ -180,7 +180,7 @@ TEST_CASE("Can add tasks after clearing") {
     list.add("New task");
     
     REQUIRE(list.size() == 1);
-    REQUIRE(list.all()[0].getDescription() == "New task");
+    REQUIRE(list.getAllTasks()[0].getDescription() == "New task");
 }
 
 TEST_CASE("Completed tasks maintain correct descriptions") {
@@ -189,7 +189,7 @@ TEST_CASE("Completed tasks maintain correct descriptions") {
     list.add("Walk dog");
     list.complete(1);
     
-    std::vector<Task> completedTasks = list.completed();
+    std::vector<Task> completedTasks = list.getCompletedTasks();
     
     REQUIRE(completedTasks.size() == 1);
     REQUIRE(completedTasks[0].getDescription() == "Walk dog");
@@ -202,7 +202,7 @@ TEST_CASE("Incomplete tasks maintain correct descriptions") {
     list.add("Read book");
     list.complete(1);
     
-    std::vector<Task> incompleteTasks = list.incomplete();
+    std::vector<Task> incompleteTasks = list.getIncompleteTasks();
     
     REQUIRE(incompleteTasks.size() == 2);
     REQUIRE(incompleteTasks[0].getDescription() == "Buy milk");
@@ -214,7 +214,7 @@ TEST_CASE("Task completion status persists") {
     list.add("Task 1");
     list.complete(0);
     
-    std::vector<Task> allTasks = list.all();
+    std::vector<Task> allTasks = list.getAllTasks();
     
     REQUIRE(allTasks[0].isComplete() == true);
 }
@@ -289,8 +289,8 @@ TEST_CASE("Can add task after completing duplicate") {
     list.add("Walk dog");
     
     REQUIRE(list.size() == 2);
-    REQUIRE(list.completed().size() == 1);
-    REQUIRE(list.incomplete().size() == 1);
+    REQUIRE(list.getCompletedTasks().size() == 1);
+    REQUIRE(list.getIncompleteTasks().size() == 1);
 }
 
 TEST_CASE("Multiple different tasks can be added") {

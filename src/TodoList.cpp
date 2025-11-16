@@ -1,4 +1,5 @@
 #include "TodoList.hpp"
+#include <iostream>
 
 bool TodoList::add(const std::string& description) {
     if (description.empty() || description.find_first_not_of(' ') == std::string::npos) {
@@ -24,11 +25,51 @@ bool TodoList::complete(int index) {
     return true;
 }
 
-std::vector<Task> TodoList::all() const {
+void TodoList::all() const {
+    std::cout << std::endl << "To Do" << std::endl;
+    if (tasks.empty()) {
+        std::cout << "Done for the day!" << std::endl;
+        return;
+    }
+    for (int i = 0; i < tasks.size(); i++) {
+        std::cout << "  [" << (tasks[i].isComplete() ? "X" : " ") << "] " 
+                  << i + 1 << ". " << tasks[i].getDescription() << std::endl;
+    }
+}
+
+void TodoList::completed() const {
+    std::cout << std::endl << "Completed Tasks" << std::endl;
+    bool hasCompleted = false;
+    for (int i = 0; i < tasks.size(); i++) {
+        if (tasks[i].isComplete()) {
+            std::cout << "  [X] " << i + 1 << ". " << tasks[i].getDescription() << std::endl;
+            hasCompleted = true;
+        }
+    }
+    if (!hasCompleted) {
+        std::cout << "Done for the day!" << std::endl;
+    }
+}
+
+void TodoList::incomplete() const {
+    std::cout << std::endl << "Incomplete Tasks" << std::endl;
+    bool hasIncomplete = false;
+    for (int i = 0; i < tasks.size(); i++) {
+        if (!tasks[i].isComplete()) {
+            std::cout << "  [ ] " << i + 1 << ". " << tasks[i].getDescription() << std::endl;
+            hasIncomplete = true;
+        }
+    }
+    if (!hasIncomplete) {
+        std::cout << "Done for the day!" << std::endl;
+    }
+}
+
+std::vector<Task> TodoList::getAllTasks() const {
     return tasks;
 }
 
-std::vector<Task> TodoList::completed() const {
+std::vector<Task> TodoList::getCompletedTasks() const {
     std::vector<Task> result;
     for (int i = 0; i < tasks.size(); i++) {
         if (tasks[i].isComplete()) {
@@ -38,7 +79,7 @@ std::vector<Task> TodoList::completed() const {
     return result;
 }
 
-std::vector<Task> TodoList::incomplete() const {
+std::vector<Task> TodoList::getIncompleteTasks() const {
     std::vector<Task> result;
     for (int i = 0; i < tasks.size(); i++) {
         if (!tasks[i].isComplete()) {
